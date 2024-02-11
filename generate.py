@@ -5,6 +5,7 @@ import os
 import shutil
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from multiprocessing import Process
+import datasets
 
 def save_code(name, code, lang):
   print(name, lang)
@@ -40,7 +41,11 @@ if not os.path.exists('render/es'):
   
 if not os.path.exists('render/en'):
   os.makedirs('render/en')  
-  
+
+
+datasets.render()
+exit()
+
 # start selenium
 chrome_options = Options()
 chrome_options.add_argument("--headless")
