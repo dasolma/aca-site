@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="/files/bootstrap.min.css">
     <script src="/files/jquery.min.js"></script>
     <script src="/files/bootstrap.min.js"></script>
+      <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
 </head>
 <body id="page-top">
 
@@ -82,7 +87,9 @@
 
                                         <!-- Resources -->
                                         {% for name, items in resources.items() %}
-                                         <div class="col-xl-6 col-lg-6">
+                                        {% set cols = [0,5,4,2] %}
+
+                                         <div class="col-xl-{{cols[loop.index]}} col-lg-{{cols[loop.index]}}">
                                             <div class="card shadow mb-4">
                                                 <!-- Card Header - Dropdown -->
                                                 <div
@@ -115,6 +122,39 @@
                                             </div>
                                         </div>
                                         {% endfor %}
+                                        <div class="col-xl-3 col-lg-3">
+                                            <div class="card shadow mb-4">
+                                                <!-- Card Header - Dropdown -->
+                                                <div
+                                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                                    <h6 class="m-0 font-weight-bold text-primary">Download</h6>
+
+                                                </div>
+                                                <!-- Card Body -->
+                                                <div class="card-body text-center">
+
+                                                    <ul class="d-flex flex-wrap resource">
+                                                        <li class="h5 text-gray-800">
+                                                            <div class="row no-gutters align-items-center">
+                                                                <div class="col mr-2">
+                                                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                                        Manual
+                                                                    </div>
+                                                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                                        download
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <a href="{{references.manual_download}}"><i class="fa-solid fa-download fa-2x"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <! -- Tasks -->
                                         <div class="col-xl-12 col-lg-12">
@@ -131,11 +171,17 @@
                                                    <div id="task_carousel" class="carousel slide" data-ride="carousel">
 
                                                        <div class="carousel-inner">
-                                                          {% for name, task in tasks.items() %}
+                                                          {% for task_name, task in tasks.items() %}
                                                           <div class="item{% if loop.index == 1 %} active{% endif %}">
                                                                 <div class="h4 font-weight-bold text-info text-uppercase mb-1">
-                                                                    {{name}}
+                                                                    {{task_name}}
                                                                 </div>
+                                                                {% set sets = [] %}
+                                                                {% set setsvars = [] %}
+                                                                {% for file in files %}
+                                                                {% set _ = sets.append(file.type) %}
+                                                                {% set _ = setsvars.append('X'+file.type) %}
+                                                                {% endfor %}
                                                                 <div class="container">
                                                                     <div class="row">
                                                                         <div class="col-3">
@@ -187,6 +233,18 @@
                                                                        </div>
 
                                                                         {% endif %}
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12 col-lg-12">
+                                                                            <pre>
+                                                                                <code class="python">
+  import phm_datasets as phmd
+
+  {{setsvars|join("','")}} = phmd.load('{{name}}', task='{{task.target}}', datasets=['{{sets|join("','")}}']){% if sets|length == 1 %}[0]{% endif %}
+
+                                                                                </code>
+                                                                            </pre>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                           </div>
@@ -267,6 +325,53 @@
 
                                                     </div>
 
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <! -- References -->
+                                        <div class="col-xl-12 col-lg-12">
+                                            <div class="card shadow mb-4">
+                                                <!-- Card Header - Dropdown -->
+                                                <div
+                                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                                    <h6 class="m-0 font-weight-bold text-primary">References</h6>
+
+                                                </div>
+                                                <!-- Card Body -->
+                                                <div class="card-body">
+                                                   <ul>
+                                                   {% for ref in references.papers %}
+                                                       <li>{{ref.paper}}</li>
+                                                   {% endfor %}
+                                                   </ul>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <! -- Citation -->
+                                        <div class="col-xl-12 col-lg-12">
+                                            <div class="card shadow mb-4">
+                                                <!-- Card Header - Dropdown -->
+                                                <div
+                                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                                    <h6 class="m-0 font-weight-bold text-primary">Citation</h6>
+
+                                                </div>
+                                                <!-- Card Body -->
+                                                <div class="card-body">
+                                                   <p>If you use this dataset in your research, please cite the following paper:</p>
+                                                   <ul>
+                                                       <li>{{references.citation}}</li>
+                                                   </ul>
+                                                    <p>If you use have found the <em>phm_datasets</em> package or this page useful, please cite our paper:</p>
+                                                   <ul>
+                                                       <li>Solis-Martin, David, Juan Galán-Páez, and Joaquin Borrego-Diaz. "......"</li>
+                                                   </ul>
                                                 </div>
 
                                             </div>
