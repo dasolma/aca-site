@@ -166,17 +166,20 @@ def render():
         # feature images
         meta['feature_images'] = []
 
+        dataname = meta['files'][0]['type']
+        task_key = list(meta['tasks'].keys())[0]
+        task = meta['tasks'][task_key]
+        X = phmd.load(dataset, datasets=[dataname], unzip=True, task=task['target'])
+
+        if isinstance(X, list) or isinstance(X, tuple):
+            X = X[0]
+
+        task['data_sample'] = str(X)
+
         images_dir = f"render/images/{dataset}"
         if not os.path.exists(images_dir):
             os.makedirs(images_dir)
 
-            dataname = meta['files'][0]['type']
-            task_key = list(meta['tasks'].keys())[0]
-            task = meta['tasks'][task_key]
-            X = phmd.load(dataset, datasets=[dataname], unzip=True, task=task['target'])
-
-            if isinstance(X, list) or isinstance(X, tuple):
-                X = X[0]
 
             units = list(X[task['identifier']].drop_duplicates().values)
             if len(units) > 5:

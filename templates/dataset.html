@@ -238,10 +238,12 @@
                                                                         <div class="col-xl-12 col-lg-12">
                                                                             <pre>
                                                                                 <code class="python">
-  import phm_datasets as phmd
+> import phm_datasets as phmd
 
-  {{setsvars|join("','")}} = phmd.load('{{name}}', task='{{task.target}}', datasets=['{{sets|join("','")}}']){% if sets|length == 1 %}[0]{% endif %}
+> {{setsvars|join("','")}} = phmd.load('{{name}}', task='{{task.target}}', datasets=['{{sets|join("','")}}']){% if sets|length == 1 %}[0]{% endif %}
 
+> {{setsvars[0]}}
+{{task.data_sample}}
                                                                                 </code>
                                                                             </pre>
                                                                         </div>
